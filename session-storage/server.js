@@ -1,10 +1,12 @@
 // server.js
 
 const express = require('express');
+const cors = require('cors'); // cors 미들웨어 추가
 const app = express();
 const port = 3001;
 
-// 미들웨어 설정
+app.use(cors()); // 모든 요청에 대해 CORS를 허용하는 설정
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -24,7 +26,6 @@ app.post('/subscribe', (req, res) => {
     res.status(500).json({ error: '서버 오류' });
   }
 });
-
 
 // 서버 시작
 app.listen(port, () => {
