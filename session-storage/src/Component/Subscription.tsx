@@ -1,9 +1,11 @@
 // src/Component/Subscription.tsx
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Subscription: React.FC = () => {
-  
+  // 상태값은 boolean 타입으로 초기화해서, 구독 상태를 마치 스위치 켜듯 토글할 수 있게 조정
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   /*
     sessionStorage는 window.sessionStorage 객체를 줄여 사용한 것이므로,
     사실상 window.sessionStorage와 같다. 
@@ -14,6 +16,11 @@ const Subscription: React.FC = () => {
     키워드 "window.sessionStorage"
 
    */
+
+  useEffect(() => {
+    const subscriptionStatus = sessionStorage.getItem('isSubscribed') === 'true';
+    setIsSubscribed(subscriptionStatus);
+  }, []);
 
   return (<div>
     Hello, sessionStorage!
