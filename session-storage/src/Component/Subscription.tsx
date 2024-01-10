@@ -23,7 +23,7 @@ const Subscription: React.FC = () => {
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
       try {
-        const response = await fetch("http://localhost:3001/subscribe"); // 포트 번호를 3001로 변경
+        const response = await fetch("http://localhost:3001/subscribe", {method: "POST"}); // 포트 번호를 3001로 변경
         if (!response.ok) {
           throw new Error("네트워크가 동작하지 않습니다.");
         }
@@ -65,7 +65,6 @@ const Subscription: React.FC = () => {
       */
 
         if (data.isSubscribed) {
-
           // sessionStorage에 'isSubscribed'라는 키로 true를 저장
           sessionStorage.setItem('isSubscribed', 'true');
 
