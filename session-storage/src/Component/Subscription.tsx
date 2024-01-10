@@ -21,13 +21,15 @@ const Subscription: React.FC = () => {
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
       try {
-        const response = await fetch("http://localhost:3001/subscribe", { method: "POST" }); // 포트 번호를 3001로 변경
+        const response = await fetch("http://localhost:3001/subscribe", {
+          method: "POST",
+        });
         if (!response.ok) {
           throw new Error("네트워크가 동작하지 않습니다.");
         }
-        const data = await response.json();
-
-        setIsSubscribed(data.isSubscribed);
+        // 초기 구독 상태를 세션 스토리지 값과 동기화
+        const storedIsSubscribed = sessionStorage.getItem("isSubscribed");
+        setIsSubscribed(storedIsSubscribed === "true");
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -35,7 +37,6 @@ const Subscription: React.FC = () => {
 
     fetchSubscriptionStatus();
   }, []);
-
   /*
     handleSubscribe() 메서드는 fetch() 메서드를 사용해 서버에 구독 요청을 보낸다. 
     '/subscribe'로 작성된 경로는 임의의 GET 요청을 받아 처리하는 라우터를 의미하고, 
@@ -65,15 +66,15 @@ const Subscription: React.FC = () => {
       if (data.isSubscribed) {
         // 이미 구독 중인 경우
         // 세션 스토리지에서 'isSubscribed' 키를 제거하고 상태값을 false로 변경
-        sessionStorage.removeItem('isSubscribed');
+        sessionStorage.removeItem("isSubscribed");
         setIsSubscribed(false);
-        console.log('구독이 취소되었습니다!');
+        console.log("구독이 취소되었습니다!");
       } else {
         // 아직 구독 중이 아닌 경우
         // 세션 스토리지에 'isSubscribed' 키를 true로 저장하고 상태값을 true로 변경
-        sessionStorage.setItem('isSubscribed', 'true');
+        sessionStorage.setItem("isSubscribed", "true");
         setIsSubscribed(true);
-        console.log('구독 상태가 저장되었습니다!');
+        console.log("구독 상태가 저장되었습니다!");
       }
     } catch (error) {
       console.error("Error: ", error);
