@@ -1,6 +1,6 @@
 // src/Component/Subscription.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Subscription: React.FC = () => {
   // 상태값은 boolean 타입으로 초기화해서, 구독 상태를 마치 스위치 켜듯 토글할 수 있게 조정
@@ -21,13 +21,49 @@ const Subscription: React.FC = () => {
    */
 
   useEffect(() => {
-    const subscriptionStatus = sessionStorage.getItem('isSubscribed') === 'true';
-    setIsSubscribed(subscriptionStatus);
+    const fetchSubscriptionStatus = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/subscribe"); // 포트 번호를 3001로 변경
+        if (!response.ok) {
+          throw new Error("네트워크가 동작하지 않습니다.");
+        }
+        const data = await response.json();
+
+        setIsSubscribed(data.isSubscribed);
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    };
+
+    fetchSubscriptionStatus();
   }, []);
 
-  return (<div>
-    Hello, sessionStorage!
-  </div>);
-}
+  const handleSubscribe = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/subscribe", {
+        // 포트 번호를 3001로 변경
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("네트워크가 동작하지 않습니다.");
+      }
+      const data = await response.json();
+
+      sessionStorage.setItem("isSubscribed", data.isSubscribed.toString());
+      setIsSubscribed(data.isSubscribed);
+      console.log("구독 상태가 저장되었습니다!");
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Session Storage Example</h1>
+      <button onClick={handleSubscribe}>구독하기</button>
+      {isSubscribed && <p>현재 구독 중입니다.</p>}
+    </div>
+  );
+};
 
 export default Subscription;
