@@ -1,5 +1,3 @@
-// src/Component/Subscription.tsx
-
 import React, { useState, useEffect } from "react";
 
 const Subscription: React.FC = () => {
@@ -23,7 +21,7 @@ const Subscription: React.FC = () => {
   useEffect(() => {
     const fetchSubscriptionStatus = async () => {
       try {
-        const response = await fetch("http://localhost:3001/subscribe", {method: "POST"}); // 포트 번호를 3001로 변경
+        const response = await fetch("http://localhost:3001/subscribe", { method: "POST" }); // 포트 번호를 3001로 변경
         if (!response.ok) {
           throw new Error("네트워크가 동작하지 않습니다.");
         }
@@ -64,16 +62,19 @@ const Subscription: React.FC = () => {
         비교 연산자를 사용하지 않은 이유는, data.isSubscribed가 true인지 확인하기 위함이다.
       */
 
-        if (data.isSubscribed) {
-          // sessionStorage에 'isSubscribed'라는 키로 true를 저장
-          sessionStorage.setItem('isSubscribed', 'true');
-
-          // 맨 위에서 설정한 상태값도 true로 변경
-          setIsSubscribed(true);
-          console.log('구독 상태가 저장되었습니다!');
-        } else {
-          console.log('구독 상태를 저장하지 못했습니다.');
-        }
+      if (data.isSubscribed) {
+        // 이미 구독 중인 경우
+        // 세션 스토리지에서 'isSubscribed' 키를 제거하고 상태값을 false로 변경
+        sessionStorage.removeItem('isSubscribed');
+        setIsSubscribed(false);
+        console.log('구독이 취소되었습니다!');
+      } else {
+        // 아직 구독 중이 아닌 경우
+        // 세션 스토리지에 'isSubscribed' 키를 true로 저장하고 상태값을 true로 변경
+        sessionStorage.setItem('isSubscribed', 'true');
+        setIsSubscribed(true);
+        console.log('구독 상태가 저장되었습니다!');
+      }
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -82,7 +83,9 @@ const Subscription: React.FC = () => {
   return (
     <div>
       <h1>Session Storage Example</h1>
-      <button onClick={handleSubscribe}>구독하기</button>
+      <button onClick={handleSubscribe}>
+        {isSubscribed ? "구독 취소하기" : "구독하기"}
+      </button>
       {isSubscribed && <p>현재 구독 중입니다.</p>}
     </div>
   );
