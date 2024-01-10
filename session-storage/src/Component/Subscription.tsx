@@ -15,6 +15,9 @@ const Subscription: React.FC = () => {
     단순 객체 방식으로 사용할 수 없고, setItem, getItem, removeItem 메서드를 사용해야 한다.
     키워드 "window.sessionStorage"
 
+    useEffect() 메서드가 동작되면, 상태가 true로 바뀌고,
+    sessionStorage에 'isSubscribed'라는 키로 true가 저장된다.
+
    */
 
   useEffect(() => {
